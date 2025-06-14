@@ -85,7 +85,7 @@ form.addEventListener('submit', async (event) => {
 
     try {
         // Faz a requisição para a API Flask
-        const response = await fetch('https://aurora-api-q3la.onrender.com', {
+        const response = await fetch('https://aurora-api-q3la.onrender.com/analise_texto', {
             method: 'POST',
             body: formData,
         });
