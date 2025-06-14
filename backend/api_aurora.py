@@ -2,7 +2,7 @@ import os
 import json
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-from groq import Groq  # Importa a biblioteca oficial da Groq
+from groq import Groq
 
 app = Flask(__name__)
 # Certifique-se de que este é o URL correto do seu front-end
@@ -28,15 +28,30 @@ def extrair_dados_estruturados_com_groq(texto_usuario: str) -> dict:
     if not groq_api_key_found:
         return {"erro": "A chave da API da Groq não está configurada no servidor.", "resumo_narrativo": "Erro de configuração do servidor."}
 
+    # --- PROMPT APRIMORADO E MAIS RIGOROSO ---
     prompt_sistema = """
-    Você é um assistente de IA especialista em analisar diários de enxaqueca para o app "Aurora".
-    Sua tarefa é extrair informações estruturadas do texto fornecido.
-    Sua saída DEVE ser um único objeto JSON válido. Preencha TODOS os campos.
-    Se uma informação não for encontrada, use um valor vazio (`[]` ou `null`).
-    O campo `resumo_narrativo` é obrigatório.
+    Your task is to act as a strict JSON formatting tool. Analyze the user's text and extract information into the provided JSON structure.
 
-    Estrutura JSON:
-    { "sintomas": [], "local_dor": [], "intensidade_dor": null, "gatilhos_potenciais": { "alimentacao": [], "ambiente": [], "rotina": [] }, "medicamentos": [], "sentimentos_emocoes": [], "resumo_narrativo": "" }
+    **CRITICAL RULES:**
+    1. Your entire output MUST be ONLY the JSON object.
+    2. DO NOT include ```json, any explanation, or any text before or after the JSON object.
+    3. You MUST fill every single field in the JSON structure.
+    4. If a value is not found in the text, use an empty value like `[]` or `null`. The `resumo_narrativo` field is mandatory and must always contain a one-sentence summary.
+
+    **JSON STRUCTURE TO POPULATE:**
+    {
+      "sintomas": [],
+      "local_dor": [],
+      "intensidade_dor": null,
+      "gatilhos_potenciais": {
+        "alimentacao": [],
+        "ambiente": [],
+        "rotina": []
+      },
+      "medicamentos": [],
+      "sentimentos_emocoes": [],
+      "resumo_narrativo": ""
+    }
     """
     
     try:
@@ -48,14 +63,11 @@ def extrair_dados_estruturados_com_groq(texto_usuario: str) -> dict:
                 },
                 {
                     "role": "user",
-                    "content": f"Texto do usuário para analisar: {texto_usuario}",
+                    "content": f"User's text to analyze: {texto_usuario}",
                 }
             ],
-            # --- ALTERAÇÃO AQUI ---
-            # Usando o modelo Llama3 de 70b, como você especificou.
             model="llama3-70b-8192", 
-            temperature=0.2,
-            # Forçamos a resposta a ser um objeto JSON
+            temperature=0.1,
             response_format={"type": "json_object"},
         )
         
