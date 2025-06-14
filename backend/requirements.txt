@@ -7,3 +7,4 @@ Pillow
 requests
 werkzeug
 gunicorn
+gevent
