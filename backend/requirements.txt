@@ -1,10 +1,11 @@
 Flask
 Flask-CORS
-torch
-transformers
-librosa
-Pillow
+#torch
+#transformers
+#librosa
+#Pillow
 requests
-werkzeug
+#werkzeug
 gunicorn
 gevent
+
