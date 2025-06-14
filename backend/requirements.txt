@@ -1,0 +1,9 @@
+Flask
+Flask-CORS
+torch
+transformers
+librosa
+Pillow
+requests
+werkzeug
+gunicorn
