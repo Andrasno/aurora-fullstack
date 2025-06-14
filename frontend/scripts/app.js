@@ -85,7 +85,7 @@ form.addEventListener('submit', async (event) => {
 
     try {
         // Faz a requisição para a API Flask
-        const response = await fetch('http://127.0.0.1:8000/analise_multimodal', {
+        const response = await fetch('https://aurora-api-4us7.onrender.com/analise_multimodal', {
             method: 'POST',
             body: formData,
         });
